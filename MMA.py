@@ -269,4 +269,4 @@ def run(G, q, l, h, t):
 
 
     filtered_sorted = sorted((res for res in C if (l <= res.size) and (res.size <= h)), key=lambda x: x.lsm_value,reverse=True)
-    return C, filtered_sorted[0].graph if filtered_sorted else None
+    return C, filtered_sorted[0].graph, filtered_sorted[0].lsm_value if filtered_sorted else None

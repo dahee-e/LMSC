@@ -89,9 +89,9 @@ start_time = time.time()
 
 
 if args.algorithm == 'NGA':
-    process ,C = NGA.run(G, args.q, args.l, args.h, args.t)
+    process ,C, C_lsm = NGA.run(G, args.q, args.l, args.h, args.t)
 elif args.algorithm == 'MMA':
-    process ,C = MMA.run(G, args.q, args.l, args.h, args.t)
+    process ,C, C_lsm = MMA.run(G, args.q, args.l, args.h, args.t)
 
 run_time = time.time() - start_time
 
@@ -109,9 +109,12 @@ print("----------------------------------------------------------")
 
 with open(output, 'w') as f:
     f.write("seconds" + "\t" + str(run_time) + '\n')
+    f.write("nodes" + "\t")
     for node in result:
         f.write(str(node) + " ")
     f.write("\n")
+
+    f.write("lsm\t"+str(C_lsm) + '\n')
     f.write("----------------------------------------------------------" + '\n')
     f.write("----------------------------------------------------------" + '\n')
     f.write("PROCESS : \n")
