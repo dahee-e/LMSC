@@ -37,15 +37,11 @@ def f2(G,C,T,v,t): # mottle & core 전부 고려 = 기존과 동일
     core = set(C.nodes())
     mottle = set(T)
     mottle.add(v)
-    mottle = G.subgraph(mottle)
-    in_degree = mottle.number_of_edges()
-    in_degree_core = C.number_of_edges()
-    out_degree = sum(G.degree(u) for u in mottle.nodes()) - 2 * in_degree
-    out_degree_core = sum(G.degree(u) for u in core) - 2 * in_degree_core
     G1 = core.union(mottle)
     G1 = G.subgraph(G1)
-    internal_edges = sum(G1.degree(v) for v in (G1.nodes() - core)) - 2 * in_degree
-    LM = (in_degree+in_degree_core+internal_edges) / (out_degree+out_degree_core-(2*internal_edges)) if (out_degree+out_degree_core-(2*internal_edges)) > 0 else 0
+    in_degree = G1.number_of_edges()
+    out_degree = sum(G.degree(u) for u in G1.nodes()) - 2 * in_degree
+    LM = (in_degree) / (out_degree) if (out_degree) > 0 else 0
     return LM
 
 
@@ -140,60 +136,46 @@ def getMottles(G, Core, h1, t, f):
 #         M.append(T)
 #     return M
 
-# def findBestSequence(G, C, M, t): best sequence가 포함된 mottle은 삭제하고 mottle set return
-#     C = C.graph
-#     S_max = []
-#     lsm_max = 0
-#     for T in M:
-#         Subseq = []
-#         lsm_mtle = 0
-#         for v in T:
-#             if lsm_mtle < cu.LSM(G, C, v, t):
-#                 Subseq.append(v)
-#             else:
-#                 break
-#         if lsm_max < lsm_mtle:
-#             lsm_max = lsm_mtle
-#             S_max = Subseq
-#
-#     return S_max, M
-
-# def findBestSequence(G, C, M, t): 전체 sequence가 아니라 best sequence찾기
-#     C = C.graph
-#     S_max = []
-#     lsm_max = 0
-#     for T in M:
-#         Subseq = []
-#         lsm_mtle = 0
-#         for v in T.sequence:
-#             lsm_current = cu.LSM(G, C, t, v)
-#             if lsm_mtle < lsm_current:
-#                 Subseq.append(v)
-#                 lsm_mtle = lsm_current
-#             else:
-#                 break
-#         if lsm_max < lsm_mtle:
-#             lsm_max = lsm_mtle
-#             S_max = Subseq
-#
-#     return S_max, M
 
 
-
-def findBestSequence(G, C, M, t): #mottle 한덩이씩 넣어보고 제일 크게 증가하는걸로 넣기
+def findBestSequence(G, C, M, t):# find best sequence , best sequence에 포함된 mottle은 삭제하고 mottle set return
     C = C.graph
     S_max = []
     lsm_max = 0
-    for T in M:
-        sequence = T.sequence
-        total_node = set(C.nodes()).union(set(sequence))
-        lsm_mtle = cu.LSM(G, G.subgraph(total_node), t)
+    best_sequence_index = -1
 
-        if lsm_max < lsm_mtle:
-            lsm_max = lsm_mtle
-            S_max = sequence
+    for index, T in enumerate(M):
+        Subseq = []
+        Core = C.copy()
+        for v in T.sequence:
+            Core = G.subgraph(set(Core.nodes()).union({v}))
+            lsm_current = cu.LSM(G, Core, t)
+            Subseq.append(v)
+            if lsm_max < lsm_current:
+                lsm_max = lsm_current
+                S_max = Subseq.copy()
+                best_sequence_index = index
+
+    # M에서 best sequence가 있는 항목을 삭제
+    if best_sequence_index != -1:
+        del M[best_sequence_index]
 
     return S_max, M
+
+# def findBestSequence(G, C, M, t): #mottle 한덩이씩 넣어보고 제일 크게 증가하는걸로 넣기
+#     C = C.graph
+#     S_max = []
+#     lsm_max = 0
+#     for T in M:
+#         sequence = T.sequence
+#         total_node = set(C.nodes()).union(set(sequence))
+#         lsm_mtle = cu.LSM(G, G.subgraph(total_node), t)
+#
+#         if lsm_max < lsm_mtle:
+#             lsm_max = lsm_mtle
+#             S_max = sequence
+#
+#     return S_max, M
 
 def run(G, q, l, h, t):
     C = []
@@ -237,7 +219,7 @@ def run(G, q, l, h, t):
 
         while C[i].size < h:
             # STEP 2 : Mottle identification procedure
-            M = getMottles(G, C[i], h - C[i].size, t, f2)
+            M = getMottles(G, C[i], h - C[i].size, t, f3)
 
             # STEP 3 : Mottle merge procedure
             S_max, _ = findBestSequence(G, C[i], M, t)

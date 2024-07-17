@@ -1,0 +1,54 @@
+iteration1
+Query	24 32 9 34
+select cmty id	1
+python run.py --algorithm MMA --q 24 32 9 34 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm NGA --q 24 32 9 34 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+---------------------------------------------
+iteration2
+Query	1 3 14 2
+select cmty id	0
+python run.py --algorithm MMA --q 1 3 14 2 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm NGA --q 1 3 14 2 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+---------------------------------------------
+iteration3
+Query	3 14 1 4
+select cmty id	0
+python run.py --algorithm MMA --q 3 14 1 4 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm NGA --q 3 14 1 4 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+---------------------------------------------
+iteration4
+Query	34 9
+select cmty id	1
+python run.py --algorithm MMA --q 34 9 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm NGA --q 34 9 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+---------------------------------------------
+iteration5
+Query	3 2
+select cmty id	0
+python run.py --algorithm MMA --q 3 2 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm NGA --q 3 2 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+---------------------------------------------
+iteration6
+Query	1 4 3 14
+select cmty id	0
+python run.py --algorithm MMA --q 1 4 3 14 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm NGA --q 1 4 3 14 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+---------------------------------------------
+iteration7
+Query	3
+select cmty id	0
+python run.py --algorithm MMA --q 3 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm NGA --q 3 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+---------------------------------------------
+iteration8
+Query	3 2 4
+select cmty id	0
+python run.py --algorithm MMA --q 3 2 4 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm NGA --q 3 2 4 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+---------------------------------------------
+iteration9
+Query	4 14 1
+select cmty id	0
+python run.py --algorithm MMA --q 4 14 1 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm NGA --q 4 14 1 --l 10 --h 20 --t 1 --network ./dataset/karate/network.dat
+---------------------------------------------

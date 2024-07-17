@@ -1,2 +1,8 @@
 # created by virtualenv automatically
-*
+/bin
+/lib
+/dataset/amazon
+/dataset/dblp
+/dataset/livejournal
+/dataset/orkut
+/dataset/youtube
