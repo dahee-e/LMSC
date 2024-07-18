@@ -81,6 +81,8 @@ def getMottles(G, Core, h1, t, f):
         node = [u]
         while len(node) < h1:
             candidates = set(cu.get_neighbour(G,G.subgraph(node))) - set(core_cmty.graph.nodes())
+            if candidates == set():
+                break
             v = max(candidates, key=lambda w: f(G, core_cmty.graph,node, w, t))
             lsm_append = f(G, core_cmty.graph,node, v, t)
 

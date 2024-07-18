@@ -30,7 +30,7 @@ def select_query_nodes(G, community, num_queries):
         return random.sample(query_nodes, k=num_queries)
 
 if __name__ == "__main__":
-    file_path = "./dataset/polblog/"
+    file_path = "./dataset/youtube/"
     GT_communities = read_community_file(file_path)
     G = read_network_file(file_path)
 

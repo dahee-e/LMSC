@@ -37,7 +37,7 @@ def get_modularity(G, C):
 
 
 if __name__ == "__main__":
-    file_path = "./dataset/karate/"
+    file_path = "./dataset/amazon/"
     G = read_network_file(file_path)
     file = os.listdir(file_path)
     file = [f for f in file if f.startswith("MMA") or f.startswith("NGA")]

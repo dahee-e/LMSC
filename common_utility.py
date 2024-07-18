@@ -3,6 +3,13 @@ from networkx.algorithms import approximation as ax
 import matplotlib.pyplot as plt
 
 
+# def steiner_tree(G, q):
+#     seed = ax.steinertree.steiner_tree(G, q, method='mehlhorn')
+#     # #visualize the graph
+#     # nx.draw(seed, with_labels=True)
+#     # plt.show()
+#     return seed
+
 def steiner_tree(G, q):
     seed = ax.steinertree.steiner_tree(G, q, method='mehlhorn')
     # #visualize the graph

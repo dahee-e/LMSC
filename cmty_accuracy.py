@@ -23,7 +23,8 @@ def read_community_results(file_path):
         line = lines[1]
         nodes_str = line.split("\t")[1].strip()
         nodes = list(map(int, nodes_str.split()))
-    return nodes
+        seconds = lines[0].split("\t")[1].strip()
+    return nodes,seconds
 
 
 
@@ -74,7 +75,7 @@ def calculate_F1score(true_communities, detected_communities,G):
     # Calculate NMI and ARI
     return f1_score(labels_true, labels_detected,  average='macro')
 
-def eval(file_path,f):
+def eval(file_path,f,cmty_id    ):
     # Replace or append file extensions as necessary to construct paths
     community_file_path = file_path+f
 
@@ -82,37 +83,43 @@ def eval(file_path,f):
     ground_truth_file_path = file_path+"community.dat"
 
     G = nx.read_edgelist(network_file_path)
-    cmty_id = 1
-    detected_communities  = read_community_results(community_file_path)
+    detected_communities,seconds  = read_community_results(community_file_path)
     true_communities = read_GT_community(ground_truth_file_path)
     true_communities = true_communities[cmty_id]
     nmi_score = calculate_nmi(true_communities, detected_communities,G)
     fscore = calculate_F1score(true_communities, detected_communities,G)
     ari_score = calculate_ari(true_communities, detected_communities,G)
-    return nmi_score, fscore, ari_score
+    return nmi_score, fscore, ari_score, seconds
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Evaluate community search algorithm')
-    parser.add_argument('--network', default="./dataset/karate/",
+    parser.add_argument('--network', default="./dataset/amazon/",
                         help='a folder name containing network.dat')
 
     args = parser.parse_args()
     print("network ", args.network)
 
-    file_path = os.listdir(args.network)
-    file_path = ["MMA_q_['24', '32', '9', '34']_l_10_h_20_t_1.0.dat","NGA_q_['24', '32', '9', '34']_l_10_h_20_t_1.0.dat",
-                 "MMA_q_['34', '9']_l_10_h_20_t_1.0.dat","NGA_q_['34', '9']_l_10_h_20_t_1.0.dat",]
+    # file_path = os.listdir(args.network)
+
+
+    file_path = ["MMA_q_['456995']_l_10_h_20_t_1.0.dat"]
+    file_path.append(file_path[0].replace("MMA", "NGA"))
+
+    cmty_id = 49481
+
+
     for f in file_path:
         if f.startswith("NGA") or f.startswith("MMA"):
             print("file name: ",f)
-            nmi_score, fscore, ari_score = eval(args.network,f)
+            nmi_score, fscore, ari_score,seconds = eval(args.network,f,cmty_id)
             print("NMI Score: ", str(nmi_score))
             print("ARI Score: ", str(ari_score))
             print("F1 Score: ", str(fscore))
 
             with open(args.network+"accuracy.txt", 'a') as f1:
                 f1.write("file name: "+f+"\n")
+                f1.write("seconds: "+str(seconds)+"\n")
                 f1.write("NMI Score: "+str(nmi_score)+"\n")
                 f1.write("ARI Score: "+str(ari_score)+"\n")
                 f1.write("F1 Score: " + str(fscore) + "\n")
