@@ -48,7 +48,7 @@ def save_to_file(df, output_file):
 
 
 community_dict = {}
-output_file = 'community.dat'  # Output file name
+output_file = 'community_origin.dat'  # Output file name
 df = read_community_file(file_path+file_name)
 
 # Save the DataFrame to a file

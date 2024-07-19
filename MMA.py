@@ -59,7 +59,7 @@ def f3(G,C,T,v,t): # mottle 고려 & mottle과 core간의 edge 고려
     G1 = G.subgraph(G1)
     internal_edges = sum(G1.degree(v) for v in (G1.nodes() - core)) - 2 * in_degree
 
-    LM = (in_degree +internal_edges)/ (out_degree - internal_edges) if (out_degree - internal_edges) > 0 else 0
+    LM = (in_degree +internal_edges)/ (out_degree) if (out_degree) > 0 else 0
     return LM
 
 

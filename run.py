@@ -83,10 +83,11 @@ G.remove_edges_from(nx.selfloop_edges(G))
 print("entire graph V=", G.number_of_nodes(), "\tE=", G.number_of_edges())
 #############################################################################
 
+if nx.is_connected(G) == False:
+    print("graph is not connected")
+    sys.exit(0)
+
 start_time = time.time()
-
-
-
 
 if args.algorithm == 'NGA':
     process ,C, C_lsm = NGA.run(G, args.q, args.l, args.h, args.t)
