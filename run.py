@@ -3,8 +3,8 @@ import networkx as nx
 import os
 import time
 import sys
-import NGA
-import MMA
+import IGA
+import SMA
 
 sys.setrecursionlimit(10000)
 
@@ -32,7 +32,7 @@ parser.add_argument('--t', type=float, default=1,
 parser.add_argument('--network', default="./dataset/karate/network.dat",
                     help='a folder name containing network.dat')
 
-parser.add_argument('--algorithm', default="NGA",
+parser.add_argument('--algorithm', default="IGA",
                     help='specify algorithm name')
 
 # parser.add_argument('--scalability', type=bool, default=False,
@@ -89,49 +89,24 @@ if nx.is_connected(G) == False:
 
 start_time = time.time()
 
-if args.algorithm == 'NGA':
-    process ,C, C_lsm = NGA.run(G, args.q, args.l, args.h, args.t)
-elif args.algorithm == 'MMA':
-    process ,C, C_lsm = MMA.run(G, args.q, args.l, args.h, args.t)
+if args.algorithm == 'IGA':
+    best_graph,best_lsm,C = IGA.run(G, args.q, args.l, args.h, args.t)
+elif args.algorithm == 'SMA':
+    best_graph,best_lsm,C = SMA.run(G, args.q, args.l, args.h, args.t)
 
 run_time = time.time() - start_time
 
-result = list()
-if C != None :
-    result = list(C)
-print("----------------------------------------------------------")
-# for comp in result:
-#     comp = [int(x) for x in comp]
-#     comp = sorted(comp, reverse=False)
-#     for u in list(comp):
-#         print(u, ' ', end="")
-#     print("")
-print("----------------------------------------------------------")
 
 with open(output, 'w') as f:
     f.write("seconds" + "\t" + str(run_time) + '\n')
     f.write("nodes" + "\t")
-    for node in result:
-        f.write(str(node) + " ")
-    f.write("\n")
-
-    f.write("lsm\t"+str(C_lsm) + '\n')
-    f.write("----------------------------------------------------------" + '\n')
-    f.write("----------------------------------------------------------" + '\n')
-    f.write("PROCESS : \n")
-
-#process data format
-# class SubgraphData:
-#     def __init__(self, graph, lsm_value, size):
-#         self.graph = graph
-#         self.lsm_value = lsm_value
-#         self.size = size
-    i = 0
-    for p in process:
-        f.write("["+str(i)+"]\nlsm_value : " + str(p.lsm_value) + "\nsize : " + str(p.size) + "\nnode:")
-        for node in p.sequence:
-             f.write(str(node) + " ")
+    if best_graph is not None:
+        for node in best_graph.nodes():
+            f.write(str(node) + " ")
         f.write("\n")
-        f.write("----------------------------------------------------------" + '\n')
-        i += 1
+        f.write("lsm\t" + str(best_lsm) + '\n')
+        for i, node in C.sequence.items():
+            f.write(str(i) + "\t" + str(node) + '\n')
+    else :
+        f.write("Can't find community")
 f.close()

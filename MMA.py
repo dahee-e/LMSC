@@ -12,32 +12,11 @@ class SubgraphData:
         self.sequence = sequence
 
 
-
-def f1(G,C,T,v,t): # mottle 만 고려
-    #T is the current mottle
-    #v is the node to be added
+def LM(G,C,T,v):
     core = set(C.nodes())
-    mottle = set(T)
-    mottle.add(v)
-    mottle = G.subgraph(mottle)
-    in_degree = mottle.number_of_edges()
-    out_degree = sum(G.degree(u) for u in mottle.nodes()) - 2 * in_degree
-    G1 = core.union(mottle)
-    G1 = G.subgraph(G1)
-    internal_edges = sum(G1.degree(v) for v in (G1.nodes()-core)) - 2 * in_degree
-
-    LM = in_degree / (out_degree-internal_edges) if (out_degree-internal_edges) > 0 else 0
-    return LM
-
-
-
-def f2(G,C,T,v,t): # mottle & core 전부 고려 = 기존과 동일
-    # T is the current mottle
-    # v is the node to be added
-    core = set(C.nodes())
-    mottle = set(T)
-    mottle.add(v)
-    G1 = core.union(mottle)
+    chain = set(T)
+    chain.add(v)
+    G1 = core.union(chain)
     G1 = G.subgraph(G1)
     in_degree = G1.number_of_edges()
     out_degree = sum(G.degree(u) for u in G1.nodes()) - 2 * in_degree
@@ -45,106 +24,57 @@ def f2(G,C,T,v,t): # mottle & core 전부 고려 = 기존과 동일
     return LM
 
 
+def getChains(G, Core, SS, h1, M):
+    if M is None:
+        candidates = cu.get_neighbour(G, Core.graph.nodes())
+    else:
+        candidates = set(cu.get_neighbour(G, SS)) - set(Core.graph.nodes())
 
-def f3(G,C,T,v,t): # mottle 고려 & mottle과 core간의 edge 고려
-    # T is the current mottle
-    # v is the node to be added
-    core = set(C.nodes())
-    mottle = set(T)
-    mottle.add(v)
-    mottle = G.subgraph(mottle)
-    in_degree = mottle.number_of_edges()
-    out_degree = sum(G.degree(u) for u in mottle.nodes()) - 2 * in_degree
-    G1 = core.union(mottle)
-    G1 = G.subgraph(G1)
-    internal_edges = sum(G1.degree(v) for v in (G1.nodes() - core)) - 2 * in_degree
-
-    LM = (in_degree +internal_edges)/ (out_degree) if (out_degree) > 0 else 0
-    return LM
-
-
-# def get_neighbour_candidates(G,C,T):
-#     neighbours = set()
-#     for x in T:
-#         neighbours.update(G.neighbors(x))
-#     neighbours -= set(C.nodes())
-#     neighbours -= set(T.nodes())
-#     return list(neighbours)
-#
-
-def getMottles(G, Core, h1, t, f):
-    M = []
+    candidates = candidates - set(Core.graph.nodes())
     sequence_set = set()
-    core_cmty = Core
-    for u in cu.get_neighbour(G, core_cmty.graph):
-        lsm = 0
-        node = [u]
-        while len(node) < h1:
-            candidates = set(cu.get_neighbour(G,G.subgraph(node))) - set(core_cmty.graph.nodes())
-            if candidates == set():
-                break
-            v = max(candidates, key=lambda w: f(G, core_cmty.graph,node, w, t))
-            lsm_append = f(G, core_cmty.graph,node, v, t)
 
-            if lsm_append <= lsm:
-                sequence = tuple(sorted(node))
-                if sequence not in sequence_set:
-                    community = G.subgraph(node).copy()
-                    M.append(SubgraphData(community, lsm, len(community), node.copy()))
-                    sequence_set.add(sequence)
-                break
-            lsm = lsm_append
-            node.append(v)
-        if len(node) == h1 :
-            sequence = tuple(sorted(node))
-            if sequence not in sequence_set:
-                community = G.subgraph(node).copy()
-                M.append(SubgraphData(community, lsm, len(community), node.copy()))
-                sequence_set.add(sequence)
+    for u in candidates:
+        chain = [u]
+        lm = 0
+        while len(chain) < h1:
+            v = max(candidates, key=lambda w: LM(G, Core.graph,chain, w))
+            lm_append = LM(G, Core.graph,chain, v)
+            if lm_append >= lm:
+                chain.append(v)
+                lm = lm_append
+        if len(chain) > 1:
+            M.append(chain)
     return M
 
 
-# def getMottles(G, Core, h1, t, f):
-#     M = []
-#     core_cmty = Core
-#     for u in cu.get_neighbour(G, core_cmty.graph):
-#         lsm = 0
-#         node = [u]
-#         while len(node) < h1:
-#             candidates = set(cu.get_neighbour(G,G.subgraph(node))) - set(core_cmty.graph.nodes())
-#             v = max(candidates, key=lambda w: f(G, core_cmty.graph,node, w, t))
-#             lsm_append = f(G, core_cmty.graph,node, v, t)
-#
-#             if lsm_append <= lsm:
-#                 community = G.subgraph(node).copy()
-#                 M.append(SubgraphData(community, lsm, len(community), node.copy()))
-#                 break
-#             lsm = lsm_append
-#             node.append(v)
-#         if len(node) == h1 :
-#             community = G.subgraph(node).copy()
-#             M.append(SubgraphData(community, lsm, len(community), node.copy()))
-#     return M
 
-# def updateMottles(G, C,C_prev, h1, t, f):
-#     M = []
-#     neighbours = cu.get_neighbour(G, C) - cu.get_neighbour(G, C_prev)
-#     for u in neighbours:
-#         T = [u]
-#         while len(T) < h1:
-#             candidates = cu.get_neighbour(G,T) - set(C.nodes())
-#             v = max(candidates, key=lambda w: f(G, C, T, w, t))
-#             T.append(v)
-#         M.append(T)
-#     return M
+def updateChains(G, C, SS, h1, M):
+    one_hop = cu.get_neighbour(G, SS)
+    for chain in M:
+        R = one_hop - set(chain.graph.nodes())
+        two_hop = cu.get_neighbour(G, one_hop)
+        T_new = []
+        candidates = set(M[0])
+        i = 0
+        while len(T_new) < h1:
+            u = max(R, key=lambda x: LM(G, chain.graph, T_new, x))
+            T_new = T_new + [u]
+            candidates = candidates - {u}
+            if M[i] in two_hop:
+                candidates = candidates.union(one_hop.intersection(cu.get_neighbour(G, M[i].graph.nodes())))
+            elif u != M[i]:
+                candidates = candidates.union(cu.get_neighbour(G, {u}) - C.nodes())
+            else:
+                candidates = candidates.union(M[i+1])
+                i += 1
+    return M
 
 
 
-def findBestSequence(G, C, M, t):# find best sequence , best sequence에 포함된 mottle은 삭제하고 mottle set return
+def findBestSequence(G, C, M, t, h_prime):# find best sequence , best sequence에 포함된 chain은 삭제하고 chain set return
     C = C.graph
     S_max = []
     lsm_max = 0
-    best_sequence_index = -1
 
     for index, T in enumerate(M):
         Subseq = []
@@ -156,28 +86,11 @@ def findBestSequence(G, C, M, t):# find best sequence , best sequence에 포함�
             if lsm_max < lsm_current:
                 lsm_max = lsm_current
                 S_max = Subseq.copy()
-                best_sequence_index = index
+            if len(Subseq) == h_prime:
+                break
 
-    # M에서 best sequence가 있는 항목을 삭제
-    if best_sequence_index != -1:
-        del M[best_sequence_index]
+    return S_max
 
-    return S_max, M
-
-# def findBestSequence(G, C, M, t): #mottle 한덩이씩 넣어보고 제일 크게 증가하는걸로 넣기
-#     C = C.graph
-#     S_max = []
-#     lsm_max = 0
-#     for T in M:
-#         sequence = T.sequence
-#         total_node = set(C.nodes()).union(set(sequence))
-#         lsm_mtle = cu.LSM(G, G.subgraph(total_node), t)
-#
-#         if lsm_max < lsm_mtle:
-#             lsm_max = lsm_mtle
-#             S_max = sequence
-#
-#     return S_max, M
 
 def run(G, q, l, h, t):
     C = []
@@ -198,7 +111,7 @@ def run(G, q, l, h, t):
         lsm_current = C[i].lsm_value
         while C[i].size < h:
 
-            neighbours = cu.get_neighbour(G, C[i].graph)
+            neighbours = cu.get_neighbour(G, C[i].graph.nodes())
 
             v = max(neighbours, key=lambda x: cu.LSM(G, C[i].graph, t, x))
             lsm_append = cu.LSM(G, C[i].graph.copy(), t, v)
@@ -220,11 +133,11 @@ def run(G, q, l, h, t):
 
 
         while C[i].size < h:
-            # STEP 2 : Mottle identification procedure
-            M = getMottles(G, C[i], h - C[i].size, t, f3)
+            # STEP 2 : Chain identification procedure
+            M = getChains(G, C[i], h - C[i].size, M)
 
-            # STEP 3 : Mottle merge procedure
-            S_max, _ = findBestSequence(G, C[i], M, t)
+            # STEP 3 : Chain merge procedure
+            S_max, _ = findBestSequence(G, C[i], M, t, h - C[i].size)
             sequence = C[i].sequence.copy()
             sequence.extend(S_max)
             community = G.subgraph(sequence).copy()
@@ -232,23 +145,10 @@ def run(G, q, l, h, t):
             C.append(SubgraphData(community, lsm_current, len(community), sequence))
             i += 1
 
+            # STEP 4 : Chain update procedure
+            M =  updateChains(G, C, S_max, h - C[i].size, M)
 
-            while C[i].size < h:
 
-                neighbours = cu.get_neighbour(G, C[i].graph)
-                v = max(neighbours, key=lambda x: cu.LSM(G, C[i].graph, t, x))
-                lsm_append = cu.LSM(G, C[i].graph.copy(), t, v)
-                if lsm_current < lsm_append:
-                    sequence = C[i].sequence.copy()
-                    sequence.append(v)
-
-                    community = G.subgraph(sequence).copy()
-
-                    C.append(SubgraphData(community, lsm_append, len(community), sequence))
-                    lsm_current = lsm_append
-                    i += 1
-                else:
-                    break
 
 
 

@@ -20,9 +20,9 @@ def steiner_tree(G, q):
 
 def get_neighbour(G, C):
     neighbours = set()
-    for x in G.subgraph(C.nodes()):
+    for x in G.subgraph(C):
         neighbours.update(G.neighbors(x))
-    neighbours -= set(C.nodes())
+    neighbours -= set(C)
     return list(neighbours)
 
 
@@ -34,4 +34,4 @@ def LSM(G, C, t, v=None):
     in_degree = C_sub.number_of_edges()
     out_degree = sum(G.degree(u) for u in C_sub.nodes()) - 2 * in_degree
     LM = in_degree / out_degree if out_degree != 0 else 0
-    return LM * (1 / pow(len(C_sub),int(t)))
+    return LM * (1 / pow(len(C_sub),int(t))), in_degree, out_degree
