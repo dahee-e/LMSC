@@ -12,9 +12,7 @@ class SubgraphData:
         self.sequence = sequence
 
 
-def LM(G,C,T,v): # chain & core 전부 고려 = 기존과 동일
-    # T is the current chain
-    # v is the node to be added
+def LM(G,C,T,v):
     core = set(C)
     chain = set(T)
     chain.add(v)
@@ -26,14 +24,14 @@ def LM(G,C,T,v): # chain & core 전부 고려 = 기존과 동일
     return LM
 
 
-def getChains(G, Core, SS, h1, M):
-    if len(M) == 0:
-        candidates = cu.get_neighbour(G, Core.graph.nodes())
+def getChains(G, Core, SS, h1, Z, P):
+    if len(Z) == 0:
+        P = cu.get_neighbour(G, Core.graph.nodes())
     else:
-        candidates = set(cu.get_neighbour(G, SS)) - set(Core.graph.nodes())
+        P = set(cu.get_neighbour(G, SS)) - set(cu.get_neighbour(G,P))
 
-    candidates = set(candidates) - set(Core.graph.nodes())
-    for u in candidates:
+    P = set(P) - set(Core.graph.nodes())
+    for u in P:
         chain = [u]
         lm = 0
         while len(chain) < h1:
@@ -48,53 +46,51 @@ def getChains(G, Core, SS, h1, M):
                 lm = lm_append
             else:
                 break
-        if len(chain) > 1:
-            M.append(chain)
-    return M
+        Z.append(chain)
+    return Z,P
 
 
 
-def updateChains(G, C, SS, h1, M):
+def updateChains(G, C, SS, h1, Z):
     core = C.graph.nodes()
     one_hop = set(cu.get_neighbour(G, SS))
     j = 0
-    while j < len(M):
-        chain = M[j]
+    while j < len(Z):
+        chain = Z[j]
         if chain[0] in SS:
-            M.remove(chain)
+            Z.remove(chain)
             continue
         R = set(one_hop)  - set(core)
-        two_hop = cu.get_neighbour(G, R)
-        if two_hop in chain:
+        two_hop = cu.get_neighbour_include_set(G, R)
+        if set(two_hop).intersection(set(chain)):
             T_new = []
             candidates = {chain[0]}
-            i = 0
             while len(T_new) < h1:
                 u = max(candidates,key=lambda x: (LM(G, core, T_new, x), -nx.shortest_path_length(G,chain[0], x), -int(x)))
-
-
                 T_new = T_new + [u]
-                candidates = candidates - {u}
-                if chain[i] in two_hop:
-                    candidates = candidates.union(R.intersection(set(cu.get_neighbour(G, chain[i]))))
-                elif u != chain[i]:
-                    candidates = candidates.union(set(cu.get_neighbour(G, {u})) - set(core))
-                else:
-                    candidates = candidates.union(chain[i+1])
-                    i += 1
+                candidates = candidates - set([u])
+                if any(u == item for item in two_hop):
+                    candidates = candidates.union(R.intersection(set(cu.get_neighbour(G, [u]))))
+                if any(u == item for item in chain):
+                    next_node = int(chain.index(u))+1
+                    next_node = set([chain[next_node]])
+                    next_node -= set(core)
+                    candidates = candidates.union(set(next_node))
+
+                candidates -= set(T_new)
             chain = T_new.copy()
-            M[j] = chain
+            Z[j] = chain
         j += 1
-    return M
+    return Z
 
 
 
-def findBestSubchain(G, C, M, t, h_prime):# find best sequence
+def findBestSubchain(G, C, Z, t, h_prime):# find best sequence
     C = C.graph
     S_max = []
     lsm_max = 0
 
-    for index, T in enumerate(M):
+    for index, T in enumerate(Z):
         Subchain = []
         Core = C.copy()
         for v in T:
@@ -110,7 +106,7 @@ def findBestSubchain(G, C, M, t, h_prime):# find best sequence
     return S_max
 
 
-def run(G, q, l, h, t):
+def run(G, q, l, h, t, weak):
     C = []
     best_lsm = 0
     best_graph = None
@@ -144,39 +140,37 @@ def run(G, q, l, h, t):
 
             C = SubgraphData(community, lsm_append, len(community), C.sequence)
             if C.size >= l:
-                if in_degree > out_degree:
-                    best_lsm = C.lsm_value
-                    best_graph = C.graph.copy()
+                if weak == True:
+                    if in_degree > out_degree:
+                        if best_lsm < C.lsm_value:
+                            best_lsm = C.lsm_value
+                            best_graph = C.graph.copy()
+                else:
+                    if best_lsm < C.lsm_value:
+                        best_lsm = C.lsm_value
+                        best_graph = C.graph.copy()
             i += 1
         else:
             break
 
-    M = []
+    Z = []
     S_max = None
+    P = None
     while C.size < h:
-
-        if int(h - C.size) == 1:
-            neighbors = cu.get_neighbour(G, C.graph.nodes())
-            v = max(neighbors, key=lambda x: (LM(G, C.graph.nodes(),[], x), -min(nx.shortest_path_length(G, q_node, x) for q_node in q), -int(x)))
-            current_C = list(C.graph.nodes())
-            current_C.append(v)
-            C.sequence[i + 1] = v
-            community = G.subgraph(current_C).copy()
-            lsm_current, in_degree, out_degree = cu.LSM(G, community, t)
-            C = SubgraphData(community, lsm_current, len(community), C.sequence)
-            if C.size >= l:
-                if in_degree > out_degree:
-                    if best_lsm < C.lsm_value:
-                        best_lsm = C.lsm_value
-                        best_graph = C.graph.copy()
-            break
 
         lsm_max = C.lsm_value
         # STEP 2 : Chain identification procedure
-        M = getChains(G, C,S_max, h - C.size, M)
+        Z, P = getChains(G, C, S_max, h - C.size, Z, P)
+
+        with open("./dataset/karate/chain.txt", 'a') as f:
+            f.write("------Chain Identification Procedure------\n")
+            f.write(str(len(Z)) + '\n')
+            for chain in Z:
+                f.write(str(chain) + '\n')
+            f.close()
 
         # STEP 3 : Subchain merge procedure
-        S_max = findBestSubchain(G, C, M, t, h - C.size)
+        S_max = findBestSubchain(G, C, Z, t, h - C.size)
 
         current_C = list(C.graph.nodes())
         current_C.extend(S_max)
@@ -186,7 +180,12 @@ def run(G, q, l, h, t):
         C = SubgraphData(community, lsm_current, len(community), C.sequence)
 
         if C.size >= l:
-            if in_degree > out_degree:
+            if weak == True:
+                if in_degree > out_degree:
+                    if best_lsm < C.lsm_value:
+                        best_lsm = C.lsm_value
+                        best_graph = C.graph.copy()
+            else:
                 if best_lsm < C.lsm_value:
                     best_lsm = C.lsm_value
                     best_graph = C.graph.copy()
@@ -194,7 +193,7 @@ def run(G, q, l, h, t):
         i += 1
 
         # STEP 4 : Chain update procedure
-        M =  updateChains(G, C, S_max, h - C.size, M)
+        Z =  updateChains(G, C, S_max, h - C.size, Z)
 
 
 

@@ -5,6 +5,7 @@ import time
 import sys
 import IGA
 import SMA
+import SMA_wo_update
 
 sys.setrecursionlimit(10000)
 
@@ -34,7 +35,7 @@ parser.add_argument('--network', default="./dataset/karate/network.dat",
 
 parser.add_argument('--algorithm', default="IGA",
                     help='specify algorithm name')
-
+parser.add_argument('--weak', type=bool, default=False)
 # parser.add_argument('--scalability', type=bool, default=False,
 #                     help='for scalability test')
 
@@ -53,6 +54,7 @@ params['q'] = args.q
 params['l'] = args.l
 params['h'] = args.h
 params['t'] = args.t
+params['weak'] = args.weak
 
 output = get_base(args.network)
 output = output + args.algorithm
@@ -90,9 +92,11 @@ if nx.is_connected(G) == False:
 start_time = time.time()
 
 if args.algorithm == 'IGA':
-    best_graph,best_lsm,C = IGA.run(G, args.q, args.l, args.h, args.t)
+    best_graph,best_lsm,C = IGA.run(G, args.q, args.l, args.h, args.t, args.weak)
 elif args.algorithm == 'SMA':
-    best_graph,best_lsm,C = SMA.run(G, args.q, args.l, args.h, args.t)
+    best_graph,best_lsm,C = SMA.run(G, args.q, args.l, args.h, args.t, args.weak)
+    print("end\n")
+    best_graph,best_lsm,C = SMA_wo_update.run(G, args.q, args.l, args.h, args.t, args.weak)
 
 run_time = time.time() - start_time
 

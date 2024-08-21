@@ -40,7 +40,7 @@ if __name__ == "__main__":
     file_path = "./dataset/amazon/"
     G = read_network_file(file_path)
     file = os.listdir(file_path)
-    file = [f for f in file if f.startswith("MMA") or f.startswith("NGA")]
+    file = [f for f in file if f.startswith("SMA") or f.startswith("IGA")]
 
     for file_name in file:
         C = read_community_file(file_path+file_name)

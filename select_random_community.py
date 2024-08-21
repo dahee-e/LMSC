@@ -2,6 +2,7 @@ import networkx as nx
 import os
 import random
 import argparse
+import networkx as nx
 
 
 def read_community_file(file_path,l):
@@ -30,6 +31,11 @@ def select_query_nodes(community, num_queries):
     else:
         return random.sample(query_nodes, k=num_queries)
 
+def select_single_query(G, num_queries):
+    query_nodes = nx.k_truss(G, k=3).nodes()
+    return random.sample(query_nodes, k=num_queries)
+
+
 if __name__ == "__main__":
 
     t = 1
@@ -44,7 +50,8 @@ if __name__ == "__main__":
                         help='threshold tau for local sketch modularity`')
     parser.add_argument('--network', default="./dataset/karate/",)
     args = parser.parse_args()
-
+    overlap = []
+    # overlap = ['amazon', 'dblp', 'youtube',"livejournal","orkut"]
     l = args.l
     h = args.h
     t = args.t
@@ -54,24 +61,32 @@ if __name__ == "__main__":
     G = read_network_file(file_path)
 
     with open(file_path + "query.txt", 'w') as f:
-        for i in range(1,11):
+        for i in range(10):
             cmty_id = random.randrange(0, len(GT_communities))
             community = GT_communities[cmty_id]
+            if file_path.split('/')[2] in overlap:
+                num_queries = random.randint(2, 5)
+                query_nodes = select_query_nodes(community, num_queries)
+                query_nodes = " ".join(map(str, query_nodes))
+            else:
+                num_queries = 1
+                query_nodes = select_single_query(G, num_queries)
+                query_nodes = " ".join(map(str, query_nodes))
 
-
-            num_queries = random.randint(1, 5)
-
-            query_nodes = select_query_nodes(community, num_queries)
-            query_nodes = " ".join(map(str, query_nodes))
-
-            f.write("iteration"+str(i)+"\n")
+            f.write("iteration "+str(i)+"\n")
             f.write("Query\t"+query_nodes+"\n")
-            f.write("Community\t"+str(len(community))+"\n")
-            f.write("-------------Given a community of size------------- \n ")
+            f.write("Community size\t"+str(len(community))+"\n")
+            f.write("Community id\t"+str(cmty_id)+"\n")
+            f.write("-------------Given a community of size------[C/2, 3C/2]------- \n")
+            l = len(community)//2
+            h = 3*len(community)//2
+            f.write("l\t"+str(l)+"\n")
+            f.write("h\t"+str(h)+"\n")
+            f.write("t\t"+str(t)+"\n")
             f.write(
-                f"python run.py --algorithm MMA --q {query_nodes} --l {str(l)} --h {str(h)} --t {str(t)} --network {file_path}network.dat\n")
+                f"python run.py --algorithm SMA --q {query_nodes} --l {str(l)} --h {str(h)} --t {str(t)} --network {file_path}network.dat\n")
             f.write(
-                f"python run.py --algorithm NGA --q {query_nodes} --l {str(l)} --h {str(h)} --t {str(t)} --network {file_path}network.dat\n")
+                f"python run.py --algorithm IGA --q {query_nodes} --l {str(l)} --h {str(h)} --t {str(t)} --network {file_path}network.dat\n")
             f.write("---------------------------------------------\n")
             f.write("---------------------------------------------\n")
     f.close()

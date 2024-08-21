@@ -22,7 +22,14 @@ def get_neighbour(G, C):
     neighbours = set()
     for x in G.subgraph(C):
         neighbours.update(G.neighbors(x))
-    neighbours -= set(C)
+    C = set(C)
+    neighbours -= C
+    return list(neighbours)
+
+def get_neighbour_include_set(G, C):
+    neighbours = set()
+    for x in G.subgraph(C):
+        neighbours.update(G.neighbors(x))
     return list(neighbours)
 
 

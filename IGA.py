@@ -9,7 +9,7 @@ class SubgraphData:
         self.size = size
         self.sequence = sequence # save to dictionary
 
-def run(G, q, l, h, t):
+def run(G, q, l, h, t, weak):
     C = []
     best_lsm = 0
     best_graph = None
@@ -40,7 +40,12 @@ def run(G, q, l, h, t):
         C = SubgraphData(community, lsm, len(community),C.sequence)
         i += 1
         if C.size >= l:
-            if in_degree > out_degree:
+            if weak == True:
+                if in_degree > out_degree:
+                    if best_lsm < C.lsm_value:
+                        best_lsm = C.lsm_value
+                        best_graph = C.graph.copy()
+            else:
                 if best_lsm < C.lsm_value:
                     best_lsm = C.lsm_value
                     best_graph = C.graph.copy()
