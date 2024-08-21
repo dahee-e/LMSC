@@ -24,14 +24,10 @@ def LM(G,C,T,v):
     return LM
 
 
-def getChains(G, Core, SS, h1, Z, P):
-    if len(Z) == 0:
-        P = cu.get_neighbour(G, Core.graph.nodes())
-    else:
-        new_P = set(cu.get_neighbour(G, SS))
-        P = new_P - P
+def getChains(G, Core, SS, h1, P):
 
-
+    P = cu.get_neighbour(G, Core.graph.nodes())
+    Z = []
     P = set(P) - set(Core.graph.nodes())
     for u in P:
         chain = [u]
@@ -53,38 +49,6 @@ def getChains(G, Core, SS, h1, Z, P):
 
 
 
-def updateChains(G, C, SS, h1, Z):
-    core = C.graph.nodes()
-    one_hop = set(cu.get_neighbour(G, SS))
-    j = 0
-    while j < len(Z):
-        chain = Z[j]
-        if chain[0] in SS:
-            Z.remove(chain)
-            continue
-        R = set(one_hop)  - set(core)
-        two_hop = cu.get_neighbour_include_set(G, R)
-        if set(two_hop).intersection(set(chain)):
-            T_new = []
-            candidates = {chain[0]}
-            while len(T_new) < h1:
-                u = max(candidates,key=lambda x: (LM(G, core, T_new, x), -nx.shortest_path_length(G,chain[0], x), -int(x)))
-                T_new = T_new + [u]
-                candidates = candidates - set([u])
-                if any(u == item for item in two_hop):
-                    candidates = candidates.union(R.intersection(set(cu.get_neighbour(G, [u]))))
-                if any(u == item for item in chain):
-                    next_node = int(chain.index(u))+1
-                    if next_node < len(chain):
-                        next_node = set([chain[next_node]])
-                        next_node -= set(core)
-                        candidates = candidates.union(set(next_node))
-
-                candidates -= set(T_new)
-            chain = T_new.copy()
-            Z[j] = chain
-        j += 1
-    return Z
 
 
 
@@ -163,9 +127,8 @@ def run(G, q, l, h, t, weak):
 
         lsm_max = C.lsm_value
         # STEP 2 : Chain identification procedure
-        Z, P = getChains(G, C, S_max, h - C.size, Z, P)
-
-        with open("./dataset/karate/chain.txt", 'a') as f:
+        Z, P = getChains(G, C, S_max, h - C.size, P)
+        with open("./dataset/karate/chain_exact.txt", 'a') as f:
             f.write("------Chain Identification Procedure------\n")
             f.write(str(len(Z)) + '\n')
             for chain in Z:
@@ -194,9 +157,6 @@ def run(G, q, l, h, t, weak):
                     best_graph = C.graph.copy()
 
         i += 1
-
-        # STEP 4 : Chain update procedure
-        Z =  updateChains(G, C, S_max, h - C.size, Z)
 
 
 
