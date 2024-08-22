@@ -118,3 +118,15 @@ python run.py --algorithm SMA --q 5 --l 9 --h 27 --t 1 --network ./dataset/karat
 python run.py --algorithm IGA --q 5 --l 9 --h 27 --t 1 --network ./dataset/karate/network.dat
 ---------------------------------------------
 ---------------------------------------------
+
+
+python run.py --algorithm SMA --q 19 --l 8 --h 24 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm SMA --q 5 --l 9 --h 27 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm SMA --q 31 --l 9 --h 27 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm SMA --q 17 --l 8 --h 24 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm SMA --q 14 --l 8 --h 24 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm SMA --q 23 --l 8 --h 24 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm SMA --q 15 --l 8 --h 24 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm SMA --q 11 --l 9 --h 27 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm SMA --q 27 --l 9 --h 27 --t 1 --network ./dataset/karate/network.dat
+python run.py --algorithm SMA --q 22 --l 8 --h 24 --t 1 --network ./dataset/karate/network.dat

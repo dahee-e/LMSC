@@ -95,7 +95,6 @@ if args.algorithm == 'IGA':
     best_graph,best_lsm,C = IGA.run(G, args.q, args.l, args.h, args.t, args.weak)
 elif args.algorithm == 'SMA':
     best_graph,best_lsm,C = SMA.run(G, args.q, args.l, args.h, args.t, args.weak)
-    print("end\n")
     best_graph,best_lsm,C = SMA_wo_update.run(G, args.q, args.l, args.h, args.t, args.weak)
 
 run_time = time.time() - start_time

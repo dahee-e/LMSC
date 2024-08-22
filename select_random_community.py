@@ -9,9 +9,7 @@ def read_community_file(file_path,l):
     with open(file_path+"community.dat", 'r') as f:
         communities = []
         for line in f:
-            community = list(map(int, line.strip().split()))
-            if len(community) > l-1:
-                communities.append(community)
+            communities.append(list(map(int, line.strip().split())))
     return communities
 
 def read_network_file(file_path):
@@ -48,7 +46,7 @@ if __name__ == "__main__":
                         help='upper bound h')
     parser.add_argument('--t', type=float, default=t,
                         help='threshold tau for local sketch modularity`')
-    parser.add_argument('--network', default="./dataset/karate/",)
+    parser.add_argument('--network', default="./dataset/dolphin/",)
     args = parser.parse_args()
     overlap = []
     # overlap = ['amazon', 'dblp', 'youtube',"livejournal","orkut"]
@@ -79,7 +77,7 @@ if __name__ == "__main__":
             f.write("Community id\t"+str(cmty_id)+"\n")
             f.write("-------------Given a community of size------[C/2, 3C/2]------- \n")
             l = len(community)//2
-            h = 3*len(community)//2
+            h = min(3*len(community)//2,len(community))
             f.write("l\t"+str(l)+"\n")
             f.write("h\t"+str(h)+"\n")
             f.write("t\t"+str(t)+"\n")

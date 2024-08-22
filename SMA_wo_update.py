@@ -12,17 +12,33 @@ class SubgraphData:
         self.sequence = sequence
 
 
-def LM(G,C,T,v):
+# def LM(G,C,T,v):
+#     core = set(C)
+#     chain = set(T)
+#     chain.add(v)
+#     G1 = core.union(chain)
+#     G1 = G.subgraph(G1)
+#     in_degree = G1.number_of_edges()
+#     out_degree = sum(G.degree(u) for u in G1.nodes()) - 2 * in_degree
+#     LM = (in_degree) / (out_degree) if (out_degree) > 0 else 0
+#     return LM
+
+
+def LM(G,C,T,v): #core 고려 안함
     core = set(C)
     chain = set(T)
     chain.add(v)
     G1 = core.union(chain)
+    core_subgraph = G.subgraph(core).copy()
+    chain_subgraph = G.subgraph(chain).copy()
     G1 = G.subgraph(G1)
-    in_degree = G1.number_of_edges()
-    out_degree = sum(G.degree(u) for u in G1.nodes()) - 2 * in_degree
-    LM = (in_degree) / (out_degree) if (out_degree) > 0 else 0
+    internal_edge = G1.number_of_edges() - core_subgraph.number_of_edges() - chain_subgraph.number_of_edges()
+    in_degree = chain_subgraph.number_of_edges() + internal_edge
+    out_degree = sum(G.degree(u) for u in chain_subgraph.nodes()) - internal_edge
+    if out_degree == 0:
+        return float('inf')
+    LM = (in_degree) / (out_degree)
     return LM
-
 
 def getChains(G, Core, SS, h1, P):
 
@@ -52,7 +68,7 @@ def getChains(G, Core, SS, h1, P):
 
 
 
-def findBestSubchain(G, C, Z, t, h_prime):# find best sequence
+def findBestSubchain(G, C, Z, t, h_prime, q_nodes):# find best sequence
     C = C.graph
     S_max = []
     lsm_max = 0
@@ -64,7 +80,11 @@ def findBestSubchain(G, C, Z, t, h_prime):# find best sequence
             Core = G.subgraph(set(Core.nodes()).union({v}))
             lsm_current,_,_ = cu.LSM(G, Core, t)
             Subchain.append(v)
-            if lsm_max < lsm_current:
+            if lsm_max == lsm_current:
+                cand = [S_max, Subchain]
+                S_max = min(cand, key=lambda x: (
+                -min(nx.shortest_path_length(G, q_node, x[0]) for q_node in q_nodes), len(x), -int(x[0])))
+            elif lsm_max < lsm_current:
                 lsm_max = lsm_current
                 S_max = Subchain.copy()
             if len(Subchain) == h_prime:
@@ -128,15 +148,19 @@ def run(G, q, l, h, t, weak):
         lsm_max = C.lsm_value
         # STEP 2 : Chain identification procedure
         Z, P = getChains(G, C, S_max, h - C.size, P)
-        with open("./dataset/karate/chain_exact.txt", 'a') as f:
+        with open("dataset/karate/chain_exact.txt", 'a') as f:
             f.write("------Chain Identification Procedure------\n")
             f.write(str(len(Z)) + '\n')
-            for chain in Z:
+            for chain in sorted(Z, key=lambda x: (len(x),x), reverse=True):
                 f.write(str(chain) + '\n')
             f.close()
 
         # STEP 3 : Subchain merge procedure
-        S_max = findBestSubchain(G, C, Z, t, h - C.size)
+        S_max = findBestSubchain(G, C, Z, t, h - C.size,q)
+
+        with open("dataset/karate/chain_exact.txt", 'a') as f:
+            f.write("------Chain Identification Procedure------\n")
+            f.write(str(S_max) + '\n')
 
         current_C = list(C.graph.nodes())
         current_C.extend(S_max)
@@ -144,6 +168,8 @@ def run(G, q, l, h, t, weak):
         community = G.subgraph(current_C).copy()
         lsm_current,in_degree,out_degree = cu.LSM(G, community, t)
         C = SubgraphData(community, lsm_current, len(community), C.sequence)
+
+
 
         if C.size >= l:
             if weak == True:
