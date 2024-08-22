@@ -1,0 +1,120 @@
+iteration 0
+Query	8
+Community size	11
+Community id	2
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	5
+h	11
+t	1
+python run.py --algorithm SMA --q 8 --l 5 --h 11 --t 1 --network ./dataset/strike/network.dat
+python run.py --algorithm IGA --q 8 --l 5 --h 11 --t 1 --network ./dataset/strike/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 1
+Query	22
+Community size	9
+Community id	0
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	4
+h	9
+t	1
+python run.py --algorithm SMA --q 22 --l 4 --h 9 --t 1 --network ./dataset/strike/network.dat
+python run.py --algorithm IGA --q 22 --l 4 --h 9 --t 1 --network ./dataset/strike/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 2
+Query	12
+Community size	4
+Community id	1
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	2
+h	4
+t	1
+python run.py --algorithm SMA --q 12 --l 2 --h 4 --t 1 --network ./dataset/strike/network.dat
+python run.py --algorithm IGA --q 12 --l 2 --h 4 --t 1 --network ./dataset/strike/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 3
+Query	12
+Community size	11
+Community id	2
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	5
+h	11
+t	1
+python run.py --algorithm SMA --q 12 --l 5 --h 11 --t 1 --network ./dataset/strike/network.dat
+python run.py --algorithm IGA --q 12 --l 5 --h 11 --t 1 --network ./dataset/strike/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 4
+Query	6
+Community size	9
+Community id	0
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	4
+h	9
+t	1
+python run.py --algorithm SMA --q 6 --l 4 --h 9 --t 1 --network ./dataset/strike/network.dat
+python run.py --algorithm IGA --q 6 --l 4 --h 9 --t 1 --network ./dataset/strike/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 5
+Query	18
+Community size	4
+Community id	1
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	2
+h	4
+t	1
+python run.py --algorithm SMA --q 18 --l 2 --h 4 --t 1 --network ./dataset/strike/network.dat
+python run.py --algorithm IGA --q 18 --l 2 --h 4 --t 1 --network ./dataset/strike/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 6
+Query	3
+Community size	4
+Community id	1
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	2
+h	4
+t	1
+python run.py --algorithm SMA --q 3 --l 2 --h 4 --t 1 --network ./dataset/strike/network.dat
+python run.py --algorithm IGA --q 3 --l 2 --h 4 --t 1 --network ./dataset/strike/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 7
+Query	2
+Community size	4
+Community id	1
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	2
+h	4
+t	1
+python run.py --algorithm SMA --q 2 --l 2 --h 4 --t 1 --network ./dataset/strike/network.dat
+python run.py --algorithm IGA --q 2 --l 2 --h 4 --t 1 --network ./dataset/strike/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 8
+Query	7
+Community size	11
+Community id	2
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	5
+h	11
+t	1
+python run.py --algorithm SMA --q 7 --l 5 --h 11 --t 1 --network ./dataset/strike/network.dat
+python run.py --algorithm IGA --q 7 --l 5 --h 11 --t 1 --network ./dataset/strike/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 9
+Query	6
+Community size	4
+Community id	1
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	2
+h	4
+t	1
+python run.py --algorithm SMA --q 6 --l 2 --h 4 --t 1 --network ./dataset/strike/network.dat
+python run.py --algorithm IGA --q 6 --l 2 --h 4 --t 1 --network ./dataset/strike/network.dat
+---------------------------------------------
+---------------------------------------------

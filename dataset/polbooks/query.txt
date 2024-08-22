@@ -1,0 +1,120 @@
+iteration 0
+Query	37
+Community size	43
+Community id	2
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	21
+h	43
+t	1
+python run.py --algorithm SMA --q 37 --l 21 --h 43 --t 1 --network ./dataset/polbooks/network.dat
+python run.py --algorithm IGA --q 37 --l 21 --h 43 --t 1 --network ./dataset/polbooks/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 1
+Query	97
+Community size	49
+Community id	1
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	24
+h	49
+t	1
+python run.py --algorithm SMA --q 97 --l 24 --h 49 --t 1 --network ./dataset/polbooks/network.dat
+python run.py --algorithm IGA --q 97 --l 24 --h 49 --t 1 --network ./dataset/polbooks/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 2
+Query	11
+Community size	13
+Community id	0
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	6
+h	13
+t	1
+python run.py --algorithm SMA --q 11 --l 6 --h 13 --t 1 --network ./dataset/polbooks/network.dat
+python run.py --algorithm IGA --q 11 --l 6 --h 13 --t 1 --network ./dataset/polbooks/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 3
+Query	82
+Community size	43
+Community id	2
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	21
+h	43
+t	1
+python run.py --algorithm SMA --q 82 --l 21 --h 43 --t 1 --network ./dataset/polbooks/network.dat
+python run.py --algorithm IGA --q 82 --l 21 --h 43 --t 1 --network ./dataset/polbooks/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 4
+Query	41
+Community size	43
+Community id	2
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	21
+h	43
+t	1
+python run.py --algorithm SMA --q 41 --l 21 --h 43 --t 1 --network ./dataset/polbooks/network.dat
+python run.py --algorithm IGA --q 41 --l 21 --h 43 --t 1 --network ./dataset/polbooks/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 5
+Query	31
+Community size	49
+Community id	1
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	24
+h	49
+t	1
+python run.py --algorithm SMA --q 31 --l 24 --h 49 --t 1 --network ./dataset/polbooks/network.dat
+python run.py --algorithm IGA --q 31 --l 24 --h 49 --t 1 --network ./dataset/polbooks/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 6
+Query	28
+Community size	43
+Community id	2
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	21
+h	43
+t	1
+python run.py --algorithm SMA --q 28 --l 21 --h 43 --t 1 --network ./dataset/polbooks/network.dat
+python run.py --algorithm IGA --q 28 --l 21 --h 43 --t 1 --network ./dataset/polbooks/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 7
+Query	79
+Community size	43
+Community id	2
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	21
+h	43
+t	1
+python run.py --algorithm SMA --q 79 --l 21 --h 43 --t 1 --network ./dataset/polbooks/network.dat
+python run.py --algorithm IGA --q 79 --l 21 --h 43 --t 1 --network ./dataset/polbooks/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 8
+Query	51
+Community size	13
+Community id	0
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	6
+h	13
+t	1
+python run.py --algorithm SMA --q 51 --l 6 --h 13 --t 1 --network ./dataset/polbooks/network.dat
+python run.py --algorithm IGA --q 51 --l 6 --h 13 --t 1 --network ./dataset/polbooks/network.dat
+---------------------------------------------
+---------------------------------------------
+iteration 9
+Query	75
+Community size	43
+Community id	2
+-------------Given a community of size------[C/2, 3C/2]------- 
+l	21
+h	43
+t	1
+python run.py --algorithm SMA --q 75 --l 21 --h 43 --t 1 --network ./dataset/polbooks/network.dat
+python run.py --algorithm IGA --q 75 --l 21 --h 43 --t 1 --network ./dataset/polbooks/network.dat
+---------------------------------------------
+---------------------------------------------
