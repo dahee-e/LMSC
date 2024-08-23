@@ -11,7 +11,7 @@ class SubgraphData:
         self.size = size
         self.sequence = sequence
 
-
+#
 # def LM(G,C,T,v):
 #     core = set(C)
 #     chain = set(T)
@@ -71,7 +71,7 @@ def getChains(G, Core, SS, h1, P):
 def findBestSubchain(G, C, Z, t, h_prime, q_nodes):# find best sequence
     C = C.graph
     S_max = []
-    lsm_max = 0
+    lsm_max = -1
 
     for index, T in enumerate(Z):
         Subchain = []
@@ -80,10 +80,10 @@ def findBestSubchain(G, C, Z, t, h_prime, q_nodes):# find best sequence
             Core = G.subgraph(set(Core.nodes()).union({v}))
             lsm_current,_,_ = cu.LSM(G, Core, t)
             Subchain.append(v)
-            if lsm_max == lsm_current:
+            if lsm_max == lsm_current and S_max != []:
                 cand = [S_max, Subchain]
                 S_max = min(cand, key=lambda x: (
-                -min(nx.shortest_path_length(G, q_node, x[0]) for q_node in q_nodes), len(x), -int(x[0])))
+                min(nx.shortest_path_length(G, q_node, x[0]) for q_node in q_nodes), len(x), int(x[0]))).copy()
             elif lsm_max < lsm_current:
                 lsm_max = lsm_current
                 S_max = Subchain.copy()
@@ -91,6 +91,7 @@ def findBestSubchain(G, C, Z, t, h_prime, q_nodes):# find best sequence
                 break
 
     return S_max
+
 
 
 def run(G, q, l, h, t, weak):

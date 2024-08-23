@@ -125,9 +125,9 @@ def updateChains(G, C, SS, h1, Z):
 
 
 def findBestSubchain(G, C, Z, t, h_prime, q_nodes):# find best sequence
-    C = C.graph
+    C = C.graph.copy()
     S_max = []
-    lsm_max = 0
+    lsm_max = -1
 
     for index, T in enumerate(Z):
         Subchain = []
@@ -139,7 +139,7 @@ def findBestSubchain(G, C, Z, t, h_prime, q_nodes):# find best sequence
             if lsm_max == lsm_current and S_max != []:
                 cand = [S_max, Subchain]
                 S_max = min(cand, key=lambda x: (
-                -min(nx.shortest_path_length(G, q_node, x[0]) for q_node in q_nodes), len(x), -int(x[0])))
+                min(nx.shortest_path_length(G, q_node, x[0]) for q_node in q_nodes), len(x), int(x[0]))).copy()
             elif lsm_max < lsm_current:
                 lsm_max = lsm_current
                 S_max = Subchain.copy()

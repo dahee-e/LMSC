@@ -5,12 +5,24 @@ import argparse
 import networkx as nx
 
 
-def read_community_file(file_path,l):
+def read_community_file(file_path):
     with open(file_path+"community.dat", 'r') as f:
         communities = []
         for line in f:
             communities.append(list(map(int, line.strip().split())))
     return communities
+
+def read_node_community_file(file_path):
+    with open(file_path + "community.dat", 'r') as f:
+        node_cmty = {}
+        for i, line in enumerate(f):
+            for node in line.strip().split():
+                node = int(node)
+                if node not in node_cmty:
+                    node_cmty[node] = []
+                node_cmty[node].append(i)
+    return node_cmty
+
 
 def read_network_file(file_path):
     with open(file_path+"network.dat", 'r') as f:
@@ -46,7 +58,7 @@ if __name__ == "__main__":
                         help='upper bound h')
     parser.add_argument('--t', type=float, default=t,
                         help='threshold tau for local sketch modularity`')
-    parser.add_argument('--network', default="./dataset/dolphin/",)
+    parser.add_argument('--network', default="./dataset/karate/",)
     args = parser.parse_args()
     overlap = []
     # overlap = ['amazon', 'dblp', 'youtube',"livejournal","orkut"]
@@ -55,21 +67,21 @@ if __name__ == "__main__":
     t = args.t
 
     file_path = args.network
-    GT_communities = read_community_file(file_path,l)
+    GT_communities = read_community_file(file_path)
+    node_cmty = read_node_community_file(file_path)
     G = read_network_file(file_path)
 
     with open(file_path + "query.txt", 'w') as f:
         for i in range(10):
-            cmty_id = random.randrange(0, len(GT_communities))
+
+
+            num_queries = 1
+            query_nodes = select_single_query(G, num_queries)
+            query_nodes = " ".join(map(str, query_nodes))
+            #community 는 query 가 포함된 GT_communities에서 찾음
+            cmty_id = random.choice(node_cmty[int(query_nodes)])
             community = GT_communities[cmty_id]
-            if file_path.split('/')[2] in overlap:
-                num_queries = random.randint(2, 5)
-                query_nodes = select_query_nodes(community, num_queries)
-                query_nodes = " ".join(map(str, query_nodes))
-            else:
-                num_queries = 1
-                query_nodes = select_single_query(G, num_queries)
-                query_nodes = " ".join(map(str, query_nodes))
+
 
             f.write("iteration "+str(i)+"\n")
             f.write("Query\t"+query_nodes+"\n")
@@ -77,7 +89,7 @@ if __name__ == "__main__":
             f.write("Community id\t"+str(cmty_id)+"\n")
             f.write("-------------Given a community of size------[C/2, 3C/2]------- \n")
             l = len(community)//2
-            h = min(3*len(community)//2,len(community))
+            h = min(3*len(community)//2,G.number_of_nodes())
             f.write("l\t"+str(l)+"\n")
             f.write("h\t"+str(h)+"\n")
             f.write("t\t"+str(t)+"\n")

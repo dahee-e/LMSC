@@ -36,6 +36,7 @@ parser.add_argument('--network', default="./dataset/karate/network.dat",
 parser.add_argument('--algorithm', default="IGA",
                     help='specify algorithm name')
 parser.add_argument('--weak', type=bool, default=False)
+parser.add_argument('--noupdate', action='store_true', default=False)
 # parser.add_argument('--scalability', type=bool, default=False,
 #                     help='for scalability test')
 
@@ -55,6 +56,7 @@ params['l'] = args.l
 params['h'] = args.h
 params['t'] = args.t
 params['weak'] = args.weak
+params['noupdate'] = args.noupdate
 
 output = get_base(args.network)
 output = output + args.algorithm
@@ -94,8 +96,10 @@ start_time = time.time()
 if args.algorithm == 'IGA':
     best_graph,best_lsm,C = IGA.run(G, args.q, args.l, args.h, args.t, args.weak)
 elif args.algorithm == 'SMA':
-    best_graph,best_lsm,C = SMA.run(G, args.q, args.l, args.h, args.t, args.weak)
-    best_graph,best_lsm,C = SMA_wo_update.run(G, args.q, args.l, args.h, args.t, args.weak)
+    if args.noupdate == False:
+        best_graph,best_lsm,C = SMA.run(G, args.q, args.l, args.h, args.t, args.weak)
+    else:
+        best_graph,best_lsm,C = SMA_wo_update.run(G, args.q, args.l, args.h, args.t, args.weak)
 
 run_time = time.time() - start_time
 
