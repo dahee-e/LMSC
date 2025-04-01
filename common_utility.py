@@ -3,18 +3,25 @@ from networkx.algorithms import approximation as ax
 import matplotlib.pyplot as plt
 
 
-# def steiner_tree(G, q):
-#     seed = ax.steinertree.steiner_tree(G, q, method='mehlhorn')
-#     # #visualize the graph
-#     # nx.draw(seed, with_labels=True)
-#     # plt.show()
-#     return seed
+def CLSM(G,C,T,v):
+    core = set(C)
+    chain = set(T)
+    chain.add(v)
+    G1 = core.union(chain)
+    core_subgraph = G.subgraph(core).copy()
+    chain_subgraph = G.subgraph(chain).copy()
+    G1 = G.subgraph(G1)
+    internal_edge = G1.number_of_edges() - core_subgraph.number_of_edges() - chain_subgraph.number_of_edges()
+    in_degree = chain_subgraph.number_of_edges()
+    out_degree = sum(G.degree(u) for u in chain_subgraph.nodes()) - 2 * in_degree - internal_edge
+    if out_degree == 0:
+        return float('inf')
+    CLSM_score = (in_degree + internal_edge) / (out_degree)
+    return CLSM_score
 
-def steiner_tree(G, q):
+
+def steiner_tree(G, q): #수정해야함
     seed = ax.steinertree.steiner_tree(G, q, method='mehlhorn')
-    # #visualize the graph
-    # nx.draw(seed, with_labels=True)
-    # plt.show()
     return seed
 
 
