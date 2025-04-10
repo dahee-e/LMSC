@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 def CLSM(G,C,T,v):
     core = set(C)
     chain = set(T)
-    chain.add(v)
+    if v is not None:
+        chain.add(v)
     G1 = core.union(chain)
     core_subgraph = G.subgraph(core).copy()
     chain_subgraph = G.subgraph(chain).copy()

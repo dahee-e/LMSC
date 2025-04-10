@@ -65,6 +65,9 @@ def updateChains(G, C, S, Z, P_prime, h1): # G: 전체 그래프, C: 현재 그�
         new_chain = []
         index = len(chain)
         pivot = chain[0]
+        # print(S)
+        # print(CLSM(G, C_nodes, ['379269'], '29886'))
+        # print(CLSM(G, C_nodes, ['379269'],'337330'))
 
         # Update rule 2: Remove chain if pivot is in S
         if pivot in S:
@@ -93,6 +96,15 @@ def updateChains(G, C, S, Z, P_prime, h1): # G: 전체 그래프, C: 현재 그�
                     index = min(index, index_tmp+1)
                     break
 
+            new_chain = chain[:index]
+        chain_set = set(chain)
+        R_prime = chain_set.intersection(N_S) - C_nodes
+        if R_prime:
+            for u in chain:
+                if u in R_prime:
+                    index_tmp = chain.index(u)
+                    index = min(index, index_tmp+1)
+                    break
             new_chain = chain[:index]
 
 
