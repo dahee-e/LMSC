@@ -21,8 +21,14 @@ def CLSM(G,C,T,v):
     return CLSM_score
 
 
-def steiner_tree(G, q): #수정해야함
-    seed = ax.steinertree.steiner_tree(G, q, method='mehlhorn')
+def steiner_tree(G, q):
+    G1 = G.copy()
+    # Add weights to the graph (using max degree)
+    for u, v in G1.edges():
+        weight = max(G1.degree(u), G1.degree(v))
+        G1[u][v]['weight'] = weight
+
+    seed = ax.steinertree.steiner_tree(G1, q, method='mehlhorn')
     return seed
 
 
