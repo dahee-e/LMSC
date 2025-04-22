@@ -173,7 +173,7 @@ def findBestSubchain(G, C, Z, t, h_prime, q_nodes):# find best sequence
     return S_max
 
 
-def run(G, q, l, h, t, weak):
+def run(G, q, l, h, t):
     C = []
     best_lsm = 0
     best_graph = None

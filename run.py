@@ -54,8 +54,6 @@ params['q'] = args.q
 params['l'] = args.l
 params['h'] = args.h
 params['t'] = args.t
-params['weak'] = args.weak
-params['naive'] = args.naive
 
 output = get_base(args.network)
 output = output + args.algorithm
