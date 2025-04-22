@@ -65,9 +65,7 @@ def updateChains(G, C, S, Z, P_prime, h1): # G: 전체 그래프, C: 현재 그�
         new_chain = []
         index = len(chain)
         pivot = chain[0]
-        # print(S)
-        # print(CLSM(G, C_nodes, ['379269'], '29886'))
-        # print(CLSM(G, C_nodes, ['379269'],'337330'))
+
 
         # Update rule 2: Remove chain if pivot is in S
         if pivot in S:
@@ -157,10 +155,10 @@ def findBestSubchain(G, C, Z, t, h_prime, q_nodes):# find best sequence
 
     for index, T in enumerate(Z):
         Subchain = []
-        Core = C
+        Core = set(C)
         for v in T:
-            C2 = G.subgraph(set(Core).union({v}))
-            lsm_current,_,_ = cu.LSM(G, C2, t)
+            Core = G.subgraph(set(Core).union({v}))
+            lsm_current,_,_ = cu.LSM(G, Core, t)
             Subchain.append(v)
             if lsm_max == lsm_current and S_max != []:
                 cand = [S_max, Subchain]
@@ -197,9 +195,10 @@ def run(G, q, l, h, t, weak):
 
         neighbours = cu.get_neighbour(G, C.graph.nodes())
 
-        v = max(neighbours, key=lambda x: (cu.LSM(G, C.graph, t, x)[0], -min(nx.shortest_path_length(G, q_node, x) for q_node in q), -int(x)))
+        v = max(neighbours, key=lambda x: (
+        cu.LSM(G, C.graph, t, x)[0], -min(nx.shortest_path_length(G, q_node, x) for q_node in q), -int(x)))
 
-        lsm_append,in_degree,out_degree = cu.LSM(G, C.graph.copy(), t, v)
+        lsm_append, in_degree, out_degree = cu.LSM(G, C.graph.copy(), t, v)
         current_C = list(C.graph.nodes())
         current_C.append(v)
         if lsm_append > best_lsm:
@@ -221,20 +220,13 @@ def run(G, q, l, h, t, weak):
     P = set()
     # STEP 2 : Chain identification procedure
     Z,P = getChains(G, C, h - C.size)
-    with open("dataset/chain_update.txt", 'a') as f:
-        f.write("------Chain Identification Procedure------\n")
-        f.write(str(len(Z)) + '\n')
-        for chain in sorted(Z, key=lambda x: (len(x), x), reverse=True):
-            f.write(str(chain) + '\n')
-        f.close()
+
+
     while C.size < h:
 
 
         # STEP 3 : Subchain merge procedure
         S_max = findBestSubchain(G, C, Z, t, h - C.size,q)
-        with open("dataset/chain_update.txt", 'a') as f:
-            f.write("------Chain Identification Procedure------\n")
-            f.write(str(S_max) + '\n')
 
         current_C = list(C.graph.nodes())
         current_C.extend(S_max)
@@ -254,12 +246,6 @@ def run(G, q, l, h, t, weak):
 
         # STEP 4 : Chain update procedure
         Z,P =  updateChains(G, C, S_max,Z,P, h - C.size)
-        with open("dataset/chain_update.txt", 'a') as f:
-            f.write("------Chain Identification Procedure------\n")
-            f.write(str(len(Z)) + '\n')
-            for chain in sorted(Z, key=lambda x: (len(x), x), reverse=True):
-                f.write(str(chain) + '\n')
-            f.close()
 
 
 

@@ -49,4 +49,4 @@ def LSM(G, C, t, v=None):
     in_degree = C_sub.number_of_edges()
     out_degree = sum(G.degree(u) for u in C_sub.nodes()) - 2 * in_degree
     LM = in_degree / out_degree if out_degree != 0 else 0
-    return LM * (1 / pow(len(C_sub),int(t))), in_degree, out_degree
+    return LM * (1 / pow(len(C_sub),t)), in_degree, out_degree
