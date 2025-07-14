@@ -5,8 +5,8 @@ import time
 import sys
 import IGA
 import SMA
-
-
+import SMA_wo_update
+import matplotlib.pyplot as plt
 sys.setrecursionlimit(10000)
 
 
@@ -18,13 +18,13 @@ def get_base(file_path) :
 
 #############################################################################
 parser = argparse.ArgumentParser(description='Run algorithm on network')
-parser.add_argument('--q',type=str, nargs='*', default=['5','13'],
+parser.add_argument('--q',type=str, nargs='*', default=['22','3'],
                     help='a set of query nodes q')
 
-parser.add_argument('--l', type=int, default=1,
+parser.add_argument('--l', type=int, default=8,
                     help='lower bound l')
 
-parser.add_argument('--h', type=int, default=16,
+parser.add_argument('--h', type=int, default=24,
                     help='upper bound h')
 
 parser.add_argument('--t', type=float, default=1,
@@ -36,6 +36,7 @@ parser.add_argument('--network', default="./dataset/karate/network.dat",
 parser.add_argument('--algorithm', default="SMA",
                     help='specify algorithm name')
 parser.add_argument('--weak', type=bool, default=False)
+parser.add_argument('--naive', action='store_true', default=False)
 # parser.add_argument('--scalability', type=bool, default=False,
 #                     help='for scalability test')
 
@@ -54,6 +55,8 @@ params['q'] = args.q
 params['l'] = args.l
 params['h'] = args.h
 params['t'] = args.t
+params['weak'] = args.weak
+params['naive'] = args.naive
 
 output = get_base(args.network)
 output = output + args.algorithm
@@ -75,26 +78,26 @@ C = None
 
 # read network
 
-
-
-
-
 G = nx.read_edgelist(args.network)
 G.remove_edges_from(nx.selfloop_edges(G))
 print("entire graph V=", G.number_of_nodes(), "\tE=", G.number_of_edges())
 #############################################################################
 
-if nx.is_connected(G) == False:
-    print("graph is not connected")
-    sys.exit(0)
+if len(args.q)>1:
+    if nx.is_connected(G) == False:
+        print("graph is not connected")
+        sys.exit(0)
+
 
 start_time = time.time()
 
 if args.algorithm == 'IGA':
-    best_graph,best_lsm,C = IGA.run(G, args.q, args.l, args.h, args.t)
+    best_graph,best_lsm,C = IGA.run(G, args.q, args.l, args.h, args.t, args.weak)
 elif args.algorithm == 'SMA':
-    best_graph,best_lsm,C = SMA.run(G, args.q, args.l, args.h, args.t)
-
+    if args.naive == False:
+        best_graph,best_lsm,C = SMA.run(G, args.q, args.l, args.h, args.t, args.weak, output)
+    # else:
+    #     best_graph,best_lsm,C = SMA_wo_update.run(G, args.q, args.l, args.h, args.t, args.weak)
 
 run_time = time.time() - start_time
 

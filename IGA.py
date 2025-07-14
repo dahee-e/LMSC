@@ -9,9 +9,9 @@ class SubgraphData:
         self.size = size
         self.sequence = sequence # save to dictionary
 
-def run(G, q, l, h, t):
+def run(G, q, l, h, t, weak):
     C = []
-    best_lsm = 0
+    best_lsm = -1
     best_graph = None
     if len(q) == 1:
         initial_graph = G.subgraph(q)
@@ -27,7 +27,8 @@ def run(G, q, l, h, t):
     while C.size < h:
 
         neighbours = cu.get_neighbour(G, C.graph.nodes())
-
+        if not neighbours:
+            break
         v = max(neighbours, key=lambda x: (cu.LSM(G, C.graph, t, x)[0], -min(nx.shortest_path_length(G, q_node, x) for q_node in q), -int(x)))
         current_C = list(C.graph.nodes())
         current_C.append(v)
@@ -36,13 +37,12 @@ def run(G, q, l, h, t):
 
         community = G.subgraph(current_C).copy()
         lsm,in_degree,out_degree = cu.LSM(G, community, t)
-
         C = SubgraphData(community, lsm, len(community),C.sequence)
         i += 1
         if C.size >= l:
             if best_lsm < C.lsm_value:
-                    best_lsm = C.lsm_value
-                    best_graph = C.graph.copy()
+                best_lsm = C.lsm_value
+                best_graph = C.graph.copy()
 
 
 

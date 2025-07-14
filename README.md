@@ -1,4 +1,6 @@
-# LMSC
+# LMSC: Local Sketch Modularity-based Community Search
+
+This project provides an implementation of two algorithms—IGA and SMA—for Local Sketch Modularity-based community search on large-scale graphs.
 
 
 ##  Running Algorithm
@@ -25,10 +27,7 @@ python run.py --algorithm SMA --q 1 2 3 --l <lower bound> --h <upper bound> --t 
 
 
 
-
-
-
-#### ❗❗ Required Arguments ❗❗
+#### Required Arguments
 
 ```--network```: File path of the network
 
@@ -43,6 +42,16 @@ python run.py --algorithm SMA --q 1 2 3 --l <lower bound> --h <upper bound> --t 
 ```--t```: The sketch threshold value
 
 
+## Datasets
+
+Public benchmark datasets can be downloaded from the Stanford SNAP Dataset Repository:
+https://snap.stanford.edu/data/index.html#communities
+
+Datasets include:
+- amazon
+- dblp
+- youtube
+- LiveJournal
 
 
 [//]: # ()
