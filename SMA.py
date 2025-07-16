@@ -146,8 +146,7 @@ def updateChains(G, C, S, Z, P_prime, h1): # G: 전체 그래프, C: 현재 그�
             new_chain.append(best_v)
         Z_prime.append(new_chain)
 
-    return Z_prime, P_prime, new_chain_count, not_update_chain
-
+    return Z_prime, P_prime
 
 
 
@@ -227,12 +226,6 @@ def run(G, q, l, h, t, weak,file_path):
     # STEP 2 : Chain identification procedure
     Z,P = getChains(G, C, h - C.size)
 
-    # with open("dataset/chain_update.txt", 'a') as f:
-    #     f.write("------Chain Identification Procedure------\n")
-    #     f.write(str(len(Z)) + '\n')
-    #     for chain in sorted(Z, key=lambda x: (len(x), x), reverse=True):
-    #         f.write(str(chain) + '\n')
-    #     f.close()
     if not Z:
         if best_graph is None:
             return None, 0, None
@@ -244,9 +237,6 @@ def run(G, q, l, h, t, weak,file_path):
 
         # STEP 3 : Subchain merge procedure
         S_max = findBestSubchain(G, C, Z, t, h - C.size,q)
-        # with open("dataset/chain_update.txt", 'a') as f:
-        #     f.write("------Chain Identification Procedure------\n")
-        #     f.write(str(S_max) + '\n')
 
         current_C = list(C.graph.nodes())
         current_C.extend(S_max)
@@ -266,30 +256,10 @@ def run(G, q, l, h, t, weak,file_path):
 
         # STEP 4 : Chain update procedure return Z_prime, P_prime, new_chain_count, not_update_chain
         previous_chain_count = len(Z)
-        Z, P, new_chain_count, not_update_chain_count = updateChains(G, C, S_max, Z, P, h - C.size)
+        Z, P = updateChains(G, C, S_max, Z, P, h - C.size)
         if len(Z) == 0:
             break
-        # Z,P =  updateChains(G, C, S_max,Z,P, h - C.size)
-        update_chain_count = previous_chain_count - not_update_chain_count
-        # with open(f"{file_path[:-4]}_chain_update_count.dat", 'a') as f:
-        #     f.write("------Chain Update Procedure------\n")
-        #     f.write("Previous Chain Count: " + str(previous_chain_count) + '\n')
-        #     f.write("Update Chain Count: " + str(update_chain_count) + '\n')
-        #     f.write("Not Update Chain Count: " + str(not_update_chain_count) + '\n')
-        #     f.write("New Chain Count: " + str(new_chain_count) + '\n')
-        #     f.write("Current Chain Size: " + str(len(Z)) + '\n')
-        #     f.write("Discarded Chain Size: " + str(new_chain_count+previous_chain_count-len(Z)) + '\n')
-        #     f.write(f"Update({update_chain_count}) = Previous({previous_chain_count}) - Not Update({not_update_chain_count})\n")
-        #     f.write(f"Discarded({new_chain_count+previous_chain_count-len(Z)}) = Previous({previous_chain_count}) - Current({len(Z)})\n")
-        #     f.close()
 
-
-        # with open("dataset/chain_update.txt", 'a') as f:
-        #     f.write("------Chain Identification Procedure------\n")
-        #     f.write(str(len(Z)) + '\n')
-        #     for chain in sorted(Z, key=lambda x: (len(x), x), reverse=True):
-        #         f.write(str(chain) + '\n')
-        #     f.close()
 
 
 
