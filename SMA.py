@@ -255,7 +255,6 @@ def run(G, q, l, h, t, weak,file_path):
             break
 
         # STEP 4 : Chain update procedure return Z_prime, P_prime, new_chain_count, not_update_chain
-        previous_chain_count = len(Z)
         Z, P = updateChains(G, C, S_max, Z, P, h - C.size)
         if len(Z) == 0:
             break
