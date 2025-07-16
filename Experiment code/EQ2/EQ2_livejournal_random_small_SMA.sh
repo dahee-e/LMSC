@@ -1,0 +1,21 @@
+#!/bin/bash
+python run.py --algorithm SMA --q 956308 --l 2 --h 7 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 3639128 --l 1 --h 4 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 347401 --l 1 --h 4 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 538903 --l 1 --h 4 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 3043285 --l 4 --h 12 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 197236 --l 8 --h 24 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 887359 --l 2 --h 6 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 3625671 --l 2 --h 6 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 925872 --l 8 --h 24 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 1848535 --l 2 --h 6 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 453021 --l 2 --h 6 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 420496 --l 1 --h 4 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 1531333 --l 1 --h 4 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 1818779 --l 2 --h 6 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 3328082 --l 1 --h 4 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 3138824 --l 8 --h 24 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 3945552 --l 1 --h 4 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 2635961 --l 1 --h 4 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 2596045 --l 4 --h 12 --t 1 --network ./ds/livejournal/network.dat
+python run.py --algorithm SMA --q 2339299 --l 1 --h 4 --t 1 --network ./ds/livejournal/network.dat

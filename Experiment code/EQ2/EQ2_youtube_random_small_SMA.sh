@@ -1,0 +1,21 @@
+#!/bin/bash
+python run.py --algorithm SMA --q 107679 --l 7 --h 21 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 554356 --l 2 --h 7 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 456468 --l 3 --h 9 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 646340 --l 3 --h 9 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 62310 --l 1 --h 4 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 90459 --l 3 --h 10 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 101892 --l 2 --h 6 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 141107 --l 2 --h 6 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 171090 --l 4 --h 13 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 216124 --l 2 --h 7 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 271804 --l 3 --h 10 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 285120 --l 5 --h 16 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 291054 --l 2 --h 6 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 366888 --l 3 --h 10 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 429282 --l 3 --h 9 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 680745 --l 2 --h 7 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 228132 --l 3 --h 9 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 790697 --l 2 --h 7 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 803919 --l 1 --h 4 --t 1 --network ./ds/youtube/network.dat
+python run.py --algorithm SMA --q 814611 --l 1 --h 4 --t 1 --network ./ds/youtube/network.dat
