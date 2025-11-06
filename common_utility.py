@@ -9,10 +9,8 @@ class LSMCalculator:
         self.t = t
         self.community = set(initial_community)
 
-        # 각 노드별 통계 저장 (커뮤니티 + 이웃만)
         self.node_stats = {}
 
-        # 초기화
         self._initialize_node_stats()
 
 
@@ -20,8 +18,6 @@ class LSMCalculator:
         self.o_C = sum(self.node_stats[v]['out'] for v in self.community)
 
     def _initialize_node_stats(self):
-        """커뮤니티와 그 이웃들만 초기화"""
-        # 1단계: 커뮤니티 노드들 초기화
         for node in self.community:
             neighbour = set(self.G.neighbors(node))
             degree = len(neighbour)
@@ -39,36 +35,6 @@ class LSMCalculator:
                     'in': v_in_count,
                     'out': v_degree - v_in_count
                 }
-    # def _initialize_node_stats(self):
-    #     """커뮤니티와 그 이웃들만 초기화"""
-    #     # 1단계: 커뮤니티 노드들 초기화
-    #     for node in self.community:
-    #         degree = self.G.degree(node)
-    #         self.node_stats[node] = {
-    #             'degree': degree,
-    #             'in': 0,
-    #             'out': degree
-    #         }
-    #
-    #     # 2단계: 커뮤니티 노드들의 이웃 초기화 및 in/out 계산
-    #     for node in self.community:
-    #         for neighbor in self.G.neighbors(node):
-    #             if neighbor in self.community:
-    #                 # 커뮤니티 내부 연결
-    #                 self.node_stats[node]['in'] += 1
-    #                 self.node_stats[node]['out'] -= 1
-    #             else:
-    #                 # 커뮤니티 외부 이웃 - 없으면 초기화
-    #                 if neighbor not in self.node_stats:
-    #                     neighbor_degree = self.G.degree(neighbor)
-    #                     self.node_stats[neighbor] = {
-    #                         'degree': neighbor_degree,
-    #                         'in': 0,
-    #                         'out': neighbor_degree
-    #                     }
-    #                 # 외부 이웃 업데이트
-    #                 self.node_stats[neighbor]['in'] += 1
-    #                 self.node_stats[neighbor]['out'] -= 1
 
     def get_lsm(self):
         if self.o_C == 0:
@@ -76,7 +42,6 @@ class LSMCalculator:
         return (self.l_C / self.o_C) * (1 / pow(len(self.community), self.t))
 
     def get_lsm_append_node(self, v):
-        """노드 v를 추가했을 때의 LSM 계산"""
         if v in self.community:
             return self.get_lsm()
 
@@ -92,11 +57,9 @@ class LSMCalculator:
             return (new_l_C / new_o_C) * (1 / pow(new_size, self.t))
 
     def add_node(self, v):
-        """노드 v를 커뮤니티에 추가하고 새로운 이웃들 초기화"""
         if v in self.community:
             return
 
-        # v가 아직 초기화되지 않았다면 초기화
         if v not in self.node_stats:
             v_degree = self.G.degree(v)
             v_in = sum(1 for neighbor in self.G.neighbors(v)
@@ -108,18 +71,16 @@ class LSMCalculator:
 
         w_v_C = self.node_stats[v]['in']
 
-        # 전체 통계 업데이트
+
         self.l_C += w_v_C
         self.o_C += self.node_stats[v]['out'] - w_v_C
 
-        # v를 커뮤니티에 추가
         self.community.add(v)
 
 
 
         for neighbor in self.G.neighbors(v):
             if neighbor != v and neighbor not in self.community:
-                # neighbor가 없으면 초기화
                 if neighbor not in self.node_stats:
                     neighbor_degree = self.G.degree(neighbor)
                     neighbor_in = sum(1 for n in self.G.neighbors(neighbor)
@@ -129,7 +90,6 @@ class LSMCalculator:
                         'out': neighbor_degree - neighbor_in
                     }
                 else:
-                    # 이미 있으면 업데이트만
                     self.node_stats[neighbor]['in'] += 1
                     self.node_stats[neighbor]['out'] -= 1
 
@@ -155,21 +115,19 @@ class LSMCalculator:
 
 
 class CLSMCalculator:
-    # CLSM = (l_Z + l_CZ) / (o_Z - l_CZ)
     def __init__(self, G, C, Z):
         self.G = G
-        self.C = set(C) # current community
+        self.C = set(C)
         self.Z = set(Z)
 
-        self.node_stats = {} # 각 노드별 통계 저장 (체인 + 체인의 이웃)  chian과의 연결, 외부와의 연결, C와의 연결
+        self.node_stats = {}
 
         self._initialize_node_stats()
         self.l_Z = sum(self.node_stats[v]['inZ'] for v in self.Z) // 2
         self.l_CZ = sum(self.node_stats[v]['inC'] for v in self.Z)
         self.o_Z = sum(self.node_stats[v]['out'] for v in self.Z)
     def _initialize_node_stats(self):
-        """체인과 그 이웃들만 초기화"""
-        # 1단계: 체인 노드들 초기화
+
         for node in self.Z:
             neighbour = set(self.G.neighbors(node))
             degree = len(neighbour)
@@ -199,7 +157,6 @@ class CLSMCalculator:
             return float('inf')
         return (self.l_Z + self.l_CZ) / (self.o_Z - self.l_CZ)
     def get_clsm_append_node(self, v):
-        """노드 v를 추가했을 때의 CLSM 계산"""
 
         w_v_Z = self.node_stats[v]['inZ']
         w_v_C = self.node_stats[v]['inC']
@@ -214,11 +171,9 @@ class CLSMCalculator:
             return (new_l_Z + new_l_CZ) / (new_o_Z - new_l_CZ)
 
     def add_node(self, v):
-        """노드 v를 체인에 추가하고 새로운 이웃들 초기화"""
         if v in self.Z:
             return
 
-        # v가 아직 초기화되지 않았다면 초기화
         if v not in self.node_stats:
             v_neighbour = set(self.G.neighbors(v))
             v_degree = len(v_neighbour)
@@ -234,17 +189,17 @@ class CLSMCalculator:
         w_v_C = self.node_stats[v]['inC']
         w_v_O = self.node_stats[v]['out']
 
-        # 전체 통계 업데이트
+
         self.l_Z += w_v_Z
         self.l_CZ += w_v_C
         self.o_Z += w_v_O - w_v_Z
 
-        # v를 체인에 추가
+
         self.Z.add(v)
 
         for neighbor in self.G.neighbors(v):
             if neighbor != v and neighbor not in self.Z and neighbor not in self.C:
-                # neighbor가 없으면 초기화
+
                 if neighbor not in self.node_stats:
                     neighbor_nbr = set(self.G.neighbors(neighbor))
                     neighbor_degree = len(neighbor_nbr)
