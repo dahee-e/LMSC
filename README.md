@@ -7,22 +7,22 @@ This project provides an implementation of two algorithms—IGA and SMA—for Lo
 
 ### (1) Running IGA
 ```
-python run.py --algorithm IGA --q <query nodes> --l <lower bound> --h <upper bound> --t <sketch threshold> --network <network_path> 
+python run_o.py --algorithm IGA --q <query nodes> --l <lower bound> --h <upper bound> --t <sketch threshold> --network <network_path> 
 ```
 
 ### (2) Running SMA
 ```
-python run.py --algorithm SMA --q <query nodes> --l <lower bound> --h <upper bound> --t <sketch threshold> --network <network_path> 
+python run_o.py --algorithm SMA --q <query nodes> --l <lower bound> --h <upper bound> --t <sketch threshold> --network <network_path> 
 ```
 
 #### 1. single query node '1'
 ```
-python run.py --algorithm SMA --q 1 --l <lower bound> --h <upper bound> --t <sketch threshold> --network <network_path> 
+python run_o.py --algorithm SMA --q 1 --l <lower bound> --h <upper bound> --t <sketch threshold> --network <network_path> 
 ```
 
 #### 2. multiple query nodes '1,2,3'
 ```
-python run.py --algorithm SMA --q 1 2 3 --l <lower bound> --h <upper bound> --t <sketch threshold> --network <network_path> 
+python run_o.py --algorithm SMA --q 1 2 3 --l <lower bound> --h <upper bound> --t <sketch threshold> --network <network_path> 
 ```
 
 

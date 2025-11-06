@@ -20,7 +20,6 @@ def run(G, q, l, h, t,steiner_type):
 
     start_time = time.time()
     lsm_calc = cu.LSMCalculator(G, initial_graph.nodes(), t)
-    print("LSM init time:", time.time() - start_time)
 
     initial_sequence = {0: list(initial_graph.nodes())}
     C = SubgraphData(

@@ -4,10 +4,8 @@ import os
 import time
 import sys
 import IGA_opt
-import IGA
 import SMA_opt
-import SMA
-import SMA_wo_update
+
 import matplotlib.pyplot as plt
 sys.setrecursionlimit(10000)
 
